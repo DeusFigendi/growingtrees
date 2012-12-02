@@ -96,7 +96,8 @@ minetest.register_abm(
 			while my_zshift <= 1 do
 				while my_yshift <= 1 do				
 					while my_xshift <= 1 do
-						if minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangeleaves" or minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:orange" or minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood1" or minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood2" or minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood3" then stuff_around = stuff_around+1 end
+						--if minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangeleaves" or minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:orange" or minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood1" or minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood2" or minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood3" then stuff_around = stuff_around+1 end
+						if is_orange_stuff({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}) then stuff_around = stuff_around+1 end
 						my_xshift = my_xshift+1
 					end				
 					my_yshift = my_yshift+1
@@ -112,13 +113,9 @@ minetest.register_abm(
 		end
 		
 		--The orange may roll around if it's on ground
-		if minetest.env:get_node({x=pos.x, y=pos.y-1, z=pos.z}).name ~= "air" and minetest.env:get_node({x=pos.x, y=pos.y-1, z=pos.z}).name ~= "growingtrees:groworangeleaves" and minetest.env:get_node({x=pos.x, y=pos.y-1, z=pos.z}).name ~= "growingtrees:orange" and minetest.env:get_node({x=pos.x, y=pos.y-1, z=pos.z}).name ~= "growingtrees:groworangewood1" and minetest.env:get_node({x=pos.x, y=pos.y-1, z=pos.z}).name ~= "growingtrees:groworangewood2" and minetest.env:get_node({x=pos.x, y=pos.y-1, z=pos.z}).name ~= "growingtrees:groworangewood3" then
-			may_roll = true
-			print('may_roll 1')
-		end
+		--if minetest.env:get_node({x=pos.x, y=pos.y-1, z=pos.z}).name ~= "air" and minetest.env:get_node({x=pos.x, y=pos.y-1, z=pos.z}).name ~= "growingtrees:groworangeleaves" and minetest.env:get_node({x=pos.x, y=pos.y-1, z=pos.z}).name ~= "growingtrees:orange" and minetest.env:get_node({x=pos.x, y=pos.y-1, z=pos.z}).name ~= "growingtrees:groworangewood1" and minetest.env:get_node({x=pos.x, y=pos.y-1, z=pos.z}).name ~= "growingtrees:groworangewood2" and minetest.env:get_node({x=pos.x, y=pos.y-1, z=pos.z}).name ~= "growingtrees:groworangewood3" then
 		if minetest.env:get_node({x=pos.x, y=pos.y-1, z=pos.z}).name ~= "air" and is_orange_stuff({x=pos.x, y=pos.y-1, z=pos.z}) == false then
 			may_roll = true
-			print('may_roll 2')
 		end
 		
 		--The orange may grow if it's on dirt and under dirt and above the dirt there should be air and it has to be day
@@ -210,7 +207,7 @@ minetest.register_abm(
 			end
 		elseif my_randomevent <= 54 then
 			if may_grow then
-				--first check if there's another orange-tree around				
+				--first check if there's another tree around				
 				my_xshift = -5
 				my_yshift = 0
 				my_zshift = -5
@@ -218,7 +215,8 @@ minetest.register_abm(
 				while my_xshift <= 5 do
 					while my_yshift <= 5 do
 						while my_zshift <= 5 do
-							if minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood1" or minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood2" or minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood3" then
+							--if minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood1" or minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood2" or minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood3" then
+							if is_trunk({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}) then
 								stuff_around = stuff_around+1
 							end
 							my_zshift = my_zshift+1
@@ -232,7 +230,7 @@ minetest.register_abm(
 				local grow_start = math.random(1,2)
 				minetest.env:add_node(pos,{name="default:dirt"})
 				if stuff_around == 0 then
-					--there is no other orange-tree(-trunk) around so lets grow
+					--there is no other tree(-trunk) around so lets grow
 					if math.random(10) == 1 then
 						print('growing a mamut tree')
 						minetest.env:add_node({x=pos.x-1, y=pos.y+grow_start, z=pos.z  },{name="growingtrees:groworangewood1"})
@@ -253,26 +251,23 @@ minetest.register_abm(
 			end
 		elseif my_randomevent <= 68 then
 			if may_sink then
-				--first check if there's another orange-tree around				
+				--first check if there's another tree around				
 				my_xshift = -5
 				my_yshift = 0
 				my_zshift = -5
 				local new_xshift = math.random(-1,1)
 				local new_zshift = math.random(-1,1)
 				stuff_around = 0
-				local stuff_around2 = 0
 				while my_xshift <= 5 do
 					while my_yshift <= 5 do
 						while my_zshift <= 5 do
-							if minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood1" or minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood2" or minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood3" then
+							--if minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood1" or minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood2" or minetest.env:get_node({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}).name == "growingtrees:groworangewood3" then
+							if is_trunk({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}) then
 								stuff_around = stuff_around+1
 								if my_xshift < 0 then new_xshift =  1 end
 								if my_xshift > 0 then new_xshift = -1 end
 								if my_zshift < 0 then new_zshift =  1 end
 								if my_zshift > 0 then new_zshift = -1 end
-							end
-							if is_orange_wood({x=pos.x+my_xshift, y=pos.y+my_yshift, z=pos.z+my_zshift}) then
-								stuff_around2 = stuff_around2+1
 							end
 							my_zshift = my_zshift+1
 						end
@@ -282,9 +277,8 @@ minetest.register_abm(
 					my_yshift = 0
 					my_xshift = my_xshift+1
 				end
-				print('countet stuff around: '..stuff_around..' : '..stuff_around2);
 				if stuff_around == 0 then
-					--there is no other orange-tree(-trunk) around so lets sink
+					--there is no other tree(-trunk) around so lets sink
 					print('sinking')
 					if (minetest.env:get_node({x=pos.x, y=pos.y-1, z=pos.z}).name ~= "default:water_source") then
 						minetest.env:add_node({x=pos.x, y=pos.y-1, z=pos.z},{name="growingtrees:orange"})
